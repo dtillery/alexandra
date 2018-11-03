@@ -3,6 +3,7 @@ import logging
 from werkzeug.serving import run_simple
 
 from alexandra.session import Session
+from alexandra.slot import Slot
 from alexandra.util import respond
 from alexandra.wsgi import WsgiApp
 
@@ -62,7 +63,7 @@ class Application:
             intent_fn = self.intent_map.get(intent, self.unknown_intent_fn)
 
             slots = {
-                slot['name']: slot.get('value')
+                slot['name']: Slot(slot)
                 for _, slot in
                 body['request']['intent'].get('slots', {}).items()
             }
@@ -97,8 +98,8 @@ class Application:
         """Decorator to register a handler for the given intent.
 
         The decorated function can either take 0 or 2 arguments. If two are
-        specified, it will be provided a dictionary of `{slot_name: value}` and
-        a :py:class:`alexandra.session.Session` instance.
+        specified, it will be provided a dictionary of `{slot_name: alexandra.slot.Slot}`
+        and a :py:class:`alexandra.session.Session` instance.
 
         If no session was provided in the request, the session object will be
         `None`. ::

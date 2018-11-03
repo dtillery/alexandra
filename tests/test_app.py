@@ -79,7 +79,8 @@ def test_intent_withargs():
 
     @app.intent('Foo')
     def foo(slots, session):
-        assert slots.get('fizz') == 'buzz'
+        assert slots.get('fizz').original_value == 'buzz'
+        assert slots.get('ab').original_value == 'cd'
         assert session.get('foo') == 'bar'
 
         return 'foo'
@@ -115,7 +116,7 @@ def test_unknown_intent_handler():
 
     @app.unknown_intent
     def unknown_handler_with_args(slots, session):
-        assert slots.get('fizz') == 'buzz'
+        assert slots.get('fizz').original_value == 'buzz'
         assert session.get('foo') == 'bar'
 
         return 'bar'
